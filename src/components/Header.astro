@@ -2,7 +2,6 @@
 import Icon from './Icon.astro';
 import SearchBox from './SearchBox.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
-import { hasCustomLogo } from '../lib/site';
 import { getDictionary } from '../i18n/ui';
 import { localizePath, withBase, type Locale } from '../i18n/config';
 
@@ -31,14 +30,12 @@ const home = localizePath('/', lang);
 <header class="sticky top-0 z-40 border-b border-brand-border/80 bg-brand-bg/85 backdrop-blur supports-[backdrop-filter]:bg-brand-bg/70">
   <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2 sm:px-6 lg:px-8">
     <a href={home} class="flex shrink-0 items-center gap-3 text-slate-100">
-      {hasCustomLogo ? (
-        <img src={withBase('/logo.webp')} alt="Mallorca Canyons" class="h-[88px] w-[88px] rounded-full object-cover" />
-      ) : (
-        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-cyan/10 text-brand-cyan ring-1 ring-inset ring-brand-cyan/30">
-          <Icon name="mountain" class="w-5 h-5" />
-        </span>
-      )}
-      <span class="hidden font-display text-base font-semibold uppercase tracking-wide sm:block">
+      <img
+        src={withBase('/logo.webp')}
+        alt="Mallorca Canyons"
+        class="h-9 w-9 rounded-full object-cover sm:h-[88px] sm:w-[88px]"
+      />
+      <span class="font-display text-base font-semibold uppercase tracking-wide">
         Mallorca<span class="text-brand-cyan">Canyons</span>
       </span>
     </a>
