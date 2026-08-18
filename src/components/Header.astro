@@ -1,0 +1,92 @@
+---
+import Icon from './Icon.astro';
+import SearchBox from './SearchBox.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { hasCustomLogo } from '../lib/site';
+import { getDictionary } from '../i18n/ui';
+import { localizePath, withBase, type Locale } from '../i18n/config';
+
+interface SearchItem {
+  nombre: string;
+  slug: string;
+  zona: string;
+  dificultad: string;
+}
+
+interface Props {
+  searchIndex: SearchItem[];
+  lang: Locale;
+}
+
+const { searchIndex, lang } = Astro.props;
+const t = getDictionary(lang);
+
+const navLinks = [
+  { href: localizePath('/', lang), label: t.nav.torrentes },
+  { href: localizePath('/seguridad', lang), label: t.nav.seguridad },
+];
+const home = localizePath('/', lang);
+---
+
+<header class="sticky top-0 z-40 border-b border-brand-border/80 bg-brand-bg/85 backdrop-blur supports-[backdrop-filter]:bg-brand-bg/70">
+  <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-2 sm:px-6 lg:px-8">
+    <a href={home} class="flex shrink-0 items-center gap-3 text-slate-100">
+      {hasCustomLogo ? (
+        <img src={withBase('/logo.webp')} alt="Mallorca Canyons" class="h-[88px] w-[88px] rounded-full object-cover" />
+      ) : (
+        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-cyan/10 text-brand-cyan ring-1 ring-inset ring-brand-cyan/30">
+          <Icon name="mountain" class="w-5 h-5" />
+        </span>
+      )}
+      <span class="hidden font-display text-base font-semibold uppercase tracking-wide sm:block">
+        Mallorca<span class="text-brand-cyan">Canyons</span>
+      </span>
+    </a>
+
+    <div class="hidden flex-1 max-w-md md:block">
+      <SearchBox torrentes={searchIndex} id="header-search" placeholder={t.search.headerPlaceholder} />
+    </div>
+
+    <nav class="ml-auto hidden items-center gap-1 sm:flex">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-brand-surface hover:text-white"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <LanguageSwitcher lang={lang} class="hidden sm:flex" />
+
+    <button
+      type="button"
+      data-mobile-toggle
+      class="ml-auto flex h-9 w-9 items-center justify-center rounded-lg border border-brand-border text-slate-300 sm:hidden"
+      aria-label={t.nav.openMenu}
+    >
+      <Icon name="menu" class="w-5 h-5" />
+    </button>
+  </div>
+
+  <div data-mobile-panel class="hidden border-t border-brand-border/80 px-4 pb-4 pt-3 sm:hidden">
+    <SearchBox torrentes={searchIndex} id="mobile-search" placeholder={t.search.headerPlaceholder} />
+    <nav class="mt-3 flex flex-col gap-1">
+      {navLinks.map((link) => (
+        <a href={link.href} class="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-brand-surface hover:text-white">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <LanguageSwitcher lang={lang} class="mt-3" />
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-mobile-toggle]');
+  const panel = document.querySelector('[data-mobile-panel]');
+  toggle?.addEventListener('click', () => {
+    panel?.classList.toggle('hidden');
+  });
+</script>

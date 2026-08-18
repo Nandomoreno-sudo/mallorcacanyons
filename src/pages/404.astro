@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../i18n/config';
+---
+
+<BaseLayout title="Página no encontrada">
+  <section class="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 text-center">
+    <Icon name="compass" class="w-12 h-12 text-brand-cyan" />
+    <h1 class="mt-4 font-display text-3xl font-bold text-white">Torrent no localizado</h1>
+    <p class="mt-2 text-slate-400">Esta página no existe o el descenso aún no está documentado.</p>
+    <a href={withBase('/')} class="mt-6 rounded-xl bg-brand-cyan/10 px-5 py-2.5 text-sm font-semibold text-brand-cyan ring-1 ring-inset ring-brand-cyan/30 transition hover:bg-brand-cyan/20">
+      Volver al listado
+    </a>
+  </section>
+</BaseLayout>

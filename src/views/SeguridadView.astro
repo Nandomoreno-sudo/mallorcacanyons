@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getDictionary } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+---
+
+<BaseLayout title={t.safety.title} description={t.safety.intro} lang={lang}>
+  <section class="border-b border-brand-border/80 bg-grid-fade">
+    <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+      <p class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-orange">
+        <Icon name="shield" class="w-4 h-4" />
+        {t.safety.badge}
+      </p>
+      <h1 class="font-display text-4xl font-bold text-white">{t.safety.title}</h1>
+      <p class="mt-4 text-lg text-slate-400">
+        {t.safety.intro}
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="rounded-2xl border border-brand-danger/30 bg-brand-danger/5 p-6">
+      <h2 class="flex items-center gap-2 text-lg font-semibold text-red-300">
+        <Icon name="phone" class="w-5 h-5" />
+        {t.safety.emergencyTitle}
+      </h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        <a href="tel:112" class="rounded-xl border border-brand-border bg-brand-surface p-4 transition hover:border-brand-danger/50">
+          <p class="text-xs text-slate-500">{t.safety.emergencyUe}</p>
+          <p class="text-2xl font-bold text-white">112</p>
+        </a>
+        <a href="tel:062" class="rounded-xl border border-brand-border bg-brand-surface p-4 transition hover:border-brand-danger/50">
+          <p class="text-xs text-slate-500">{t.safety.emergencyGreim}</p>
+          <p class="text-2xl font-bold text-white">062</p>
+        </a>
+        <a href="tel:061" class="rounded-xl border border-brand-border bg-brand-surface p-4 transition hover:border-brand-danger/50">
+          <p class="text-xs text-slate-500">{t.safety.emergencyIbsalut}</p>
+          <p class="text-2xl font-bold text-white">061</p>
+        </a>
+      </div>
+      <p class="mt-4 text-sm text-slate-400">
+        {t.safety.emergencyNote}
+      </p>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="flex items-center gap-2 font-display text-xl font-semibold text-white">
+        <Icon name="rope" class="w-5 h-5 text-brand-cyan" />
+        {t.safety.materialTitle}
+      </h2>
+      <ul class="mt-4 grid gap-2.5 sm:grid-cols-2">
+        {t.safety.material.map((item) => (
+          <li class="flex items-start gap-2.5 rounded-xl border border-brand-border bg-brand-surface p-3 text-sm text-slate-300">
+            <Icon name="shield" class="mt-0.5 w-4 h-4 shrink-0 text-brand-cyan" />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="flex items-center gap-2 font-display text-xl font-semibold text-white">
+        <Icon name="alert" class="w-5 h-5 text-brand-orange" />
+        {t.safety.protocolTitle}
+      </h2>
+      <div class="mt-4 space-y-4">
+        {t.safety.protocol.map((p, i) => (
+          <div class="rounded-xl border border-brand-border bg-brand-surface p-5">
+            <p class="mb-2 flex items-center gap-2 text-sm font-semibold text-brand-cyan">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-cyan/10 text-xs">{i + 1}</span>
+              {p.title}
+            </p>
+            <p class="text-sm leading-relaxed text-slate-300">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-10 rounded-2xl border border-brand-orange/30 bg-brand-orange/5 p-6">
+      <h2 class="flex items-center gap-2 text-lg font-semibold text-orange-300">
+        <Icon name="map-pin" class="w-5 h-5" />
+        {t.safety.permitsTitle}
+      </h2>
+      <p class="mt-3 text-sm leading-relaxed text-slate-300">
+        {t.safety.permitsBody}
+      </p>
+      <a
+        href="https://www.caib.es"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-orange hover:underline"
+      >
+        {t.safety.permitsLink}
+        <Icon name="chevron" class="w-3.5 h-3.5 -rotate-90" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

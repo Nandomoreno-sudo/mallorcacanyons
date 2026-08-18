@@ -1,0 +1,129 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+
+interface Props {
+  images: ImageMetadata[];
+  id: string;
+  alt: string;
+}
+
+const { images, id, alt } = Astro.props;
+---
+
+<div
+  data-lightbox
+  id={id}
+  class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-sm"
+  role="dialog"
+  aria-modal="true"
+  aria-label={`Visor de fotos: ${alt}`}
+>
+  <button
+    type="button"
+    data-lightbox-close
+    aria-label="Cerrar"
+    class="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-brand-cyan/30 sm:right-6 sm:top-6"
+  >
+    <Icon name="x" class="w-6 h-6" />
+  </button>
+
+  <div class="flex h-full items-center justify-center px-2 sm:px-16">
+    <button
+      type="button"
+      data-lightbox-prev
+      aria-label="Foto anterior"
+      class="absolute left-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-brand-cyan/30 sm:left-4"
+    >
+      <Icon name="chevron" class="w-6 h-6 rotate-90" />
+    </button>
+
+    <div class="relative flex h-full w-full items-center justify-center overflow-hidden touch-pan-y" data-lightbox-track>
+      {images.map((img, i) => (
+        <div data-lightbox-slide data-index={i} class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+          <Image
+            src={img}
+            alt={`${alt} — foto ${i + 1} de ${images.length}`}
+            width={1600}
+            height={1200}
+            loading="eager"
+            class="max-h-[85vh] max-w-full select-none object-contain"
+          />
+        </div>
+      ))}
+    </div>
+
+    <button
+      type="button"
+      data-lightbox-next
+      aria-label="Foto siguiente"
+      class="absolute right-1 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-brand-cyan/30 sm:right-4"
+    >
+      <Icon name="chevron" class="w-6 h-6 -rotate-90" />
+    </button>
+  </div>
+
+  <p data-lightbox-counter class="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-slate-300">
+    1 / {images.length}
+  </p>
+</div>
+
+<script define:vars={{ id }}>
+  const root = document.getElementById(id);
+  if (root) {
+    const slides = Array.from(root.querySelectorAll('[data-lightbox-slide]'));
+    const counter = root.querySelector('[data-lightbox-counter]');
+    let current = 0;
+    let touchStartX = 0;
+
+    const show = (index) => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('opacity-100', i === current);
+        slide.classList.toggle('opacity-0', i !== current);
+        slide.style.zIndex = i === current ? '1' : '0';
+      });
+      if (counter) counter.textContent = `${current + 1} / ${slides.length}`;
+    };
+
+    const open = (index) => {
+      root.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      show(index);
+    };
+
+    const close = () => {
+      root.classList.add('hidden');
+      document.body.style.overflow = '';
+    };
+
+    root.querySelector('[data-lightbox-close]')?.addEventListener('click', close);
+    root.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(current - 1));
+    root.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(current + 1));
+
+    root.addEventListener('click', (e) => {
+      if (e.target === root) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (root.classList.contains('hidden')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+
+    const track = root.querySelector('[data-lightbox-track]');
+    track?.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    track?.addEventListener('touchend', (e) => {
+      const delta = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(delta) > 50) show(delta > 0 ? current - 1 : current + 1);
+    }, { passive: true });
+
+    // Expone un abridor global para que las miniaturas de cualquier galería lo usen.
+    window.__lightboxes ??= {};
+    window.__lightboxes[id] = open;
+  }
+</script>

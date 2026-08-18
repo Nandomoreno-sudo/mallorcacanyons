@@ -1,0 +1,90 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import Lightbox from './Lightbox.astro';
+
+interface Props {
+  topos: ImageMetadata[];
+  alt: string;
+  id: string;
+  tapToZoom: string;
+}
+
+const { topos, alt, id, tapToZoom } = Astro.props;
+---
+
+{topos.length > 0 && (
+  <div data-topo-viewer={id}>
+    <div class="relative overflow-hidden rounded-2xl border border-brand-border bg-brand-surface">
+      {topos.map((img, i) => (
+        <button
+          type="button"
+          data-topo-slide
+          data-index={i}
+          data-open-lightbox={id}
+          class:list={['block w-full', i === 0 ? '' : 'hidden']}
+          aria-label="Ampliar topografía"
+        >
+          <Image
+            src={img}
+            alt={`Topografía ${i + 1} — ${alt}`}
+            width={1400}
+            height={1000}
+            loading="eager"
+            class="mx-auto max-h-[70vh] w-full object-contain bg-slate-950/40"
+          />
+        </button>
+      ))}
+      <span class="pointer-events-none absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-black/50 px-2.5 py-1 text-xs font-medium text-slate-200">
+        <Icon name="layers" class="w-3.5 h-3.5" />
+        {tapToZoom}
+      </span>
+    </div>
+
+    {topos.length > 1 && (
+      <div class="mt-3 flex gap-2.5">
+        {topos.map((img, i) => (
+          <button
+            type="button"
+            data-topo-thumb
+            data-index={i}
+            class:list={[
+              'overflow-hidden rounded-lg ring-2 transition',
+              i === 0 ? 'ring-brand-cyan' : 'ring-transparent hover:ring-brand-border',
+            ]}
+          >
+            <Image src={img} alt={`Miniatura topografía ${i + 1}`} width={120} height={90} class="h-16 w-20 object-cover sm:h-20 sm:w-28" />
+          </button>
+        ))}
+      </div>
+    )}
+
+    <Lightbox images={topos} id={`${id}-lightbox`} alt={`Topografía — ${alt}`} />
+  </div>
+)}
+
+<script define:vars={{ id }}>
+  const root = document.querySelector(`[data-topo-viewer="${id}"]`);
+  if (root) {
+    const slides = Array.from(root.querySelectorAll('[data-topo-slide]'));
+    const thumbs = Array.from(root.querySelectorAll('[data-topo-thumb]'));
+
+    const select = (index) => {
+      slides.forEach((s) => s.classList.toggle('hidden', Number(s.dataset.index) !== index));
+      thumbs.forEach((t) => {
+        t.classList.toggle('ring-brand-cyan', Number(t.dataset.index) === index);
+        t.classList.toggle('ring-transparent', Number(t.dataset.index) !== index);
+      });
+    };
+
+    thumbs.forEach((t) => t.addEventListener('click', () => select(Number(t.dataset.index))));
+
+    slides.forEach((s) =>
+      s.addEventListener('click', () => {
+        const index = Number(s.dataset.index);
+        window.__lightboxes?.[`${id}-lightbox`]?.(index);
+      })
+    );
+  }
+</script>

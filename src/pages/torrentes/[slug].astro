@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import TorrenteView from '../../views/TorrenteView.astro';
+
+export async function getStaticPaths() {
+  const torrentes = await getCollection('torrentes', ({ data }) => data.lang === 'es');
+  return torrentes.map((torrente) => ({
+    params: { slug: torrente.data.slug },
+    props: { torrente },
+  }));
+}
+
+const { torrente } = Astro.props;
+---
+
+<TorrenteView torrente={torrente} lang="es" />

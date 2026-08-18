@@ -1,0 +1,148 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TorrenteCard from '../components/TorrenteCard.astro';
+import FilterBar from '../components/FilterBar.astro';
+import SearchBox from '../components/SearchBox.astro';
+import Icon from '../components/Icon.astro';
+import { extractGrade, primaryZona } from '../lib/torrente-helpers';
+import { getDictionary } from '../i18n/ui';
+import { localizePath, withBase, type Locale } from '../i18n/config';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+
+const torrentes = (await getCollection('torrentes', ({ data }) => data.lang === lang)).sort((a, b) =>
+  a.data.nombre.localeCompare(b.data.nombre, lang)
+);
+
+const searchIndex = torrentes.map((entry) => ({
+  nombre: entry.data.nombre,
+  slug: entry.data.slug,
+  zona: entry.data.zona,
+  dificultad: entry.data.dificultad,
+}));
+
+const zonas = [...new Set(torrentes.map((entry) => primaryZona(entry.data.zona)))].sort((a, b) => a.localeCompare(b, lang));
+const grados = [...new Set(torrentes.map((entry) => extractGrade(entry.data.dificultad)))].sort();
+const caracteres = [...new Set(torrentes.flatMap((entry) => entry.data.tags))].sort((a, b) => a.localeCompare(b, lang));
+---
+
+<BaseLayout title={t.home.sectionTitle} lang={lang}>
+  <section class="relative overflow-hidden border-b border-brand-border/80">
+    <div class="absolute inset-0">
+      <img
+        src={withBase('/hero.webp')}
+        alt=""
+        width="1440"
+        height="811"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-bg/65 via-brand-bg/35 to-brand-bg/10"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-bg/55 via-brand-bg/5 to-transparent"></div>
+      <div class="absolute inset-0 bg-grid-fade"></div>
+    </div>
+    <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-cyan">
+          <Icon name="compass" class="w-4 h-4" />
+          {t.home.badge}
+        </p>
+        <h1 class="font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
+          {t.home.titlePre}<span class="text-brand-cyan">{t.home.titleHighlight}</span>{t.home.titlePost}
+        </h1>
+        <p class="mt-4 text-lg text-slate-400">
+          {t.home.subtitle}
+        </p>
+
+        <div class="mt-8 max-w-md">
+          <SearchBox torrentes={searchIndex} id="hero-search" placeholder={t.search.heroPlaceholder} size="lg" />
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-4 text-sm text-slate-400">
+          <span class="flex items-center gap-1.5"><Icon name="mountain" class="w-4 h-4 text-brand-cyan" /> {torrentes.length} {t.home.statsCount}</span>
+          <span class="flex items-center gap-1.5"><Icon name="layers" class="w-4 h-4 text-brand-cyan" /> {t.home.statsTopos}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="grid overflow-hidden rounded-2xl border border-brand-border bg-brand-surface shadow-card md:grid-cols-2">
+      <div class="relative h-64 md:h-auto md:min-h-[320px] order-first">
+        <img
+          src={withBase('/image_6.webp')}
+          alt={t.discover.title}
+          width="720"
+          height="866"
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-surface/70 via-transparent to-transparent md:bg-gradient-to-r"></div>
+      </div>
+      <div class="flex flex-col justify-center gap-4 p-8 sm:p-10">
+        <p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-cyan">
+          <Icon name="compass" class="w-4 h-4" />
+          {t.discover.badge}
+        </p>
+        <h2 class="font-display text-2xl font-bold text-white sm:text-3xl">{t.discover.title}</h2>
+        <p class="text-slate-400">{t.discover.body}</p>
+        <div class="mt-2 flex flex-wrap gap-3">
+          <a
+            href="#descensos"
+            class="inline-flex items-center gap-2 rounded-xl bg-brand-cyan px-5 py-2.5 text-sm font-semibold text-brand-bg transition hover:bg-brand-cyan/90"
+          >
+            {t.discover.ctaPrimary}
+            <Icon name="chevron" class="w-4 h-4 -rotate-90" />
+          </a>
+          <a
+            href={localizePath('/seguridad', lang)}
+            class="inline-flex items-center gap-2 rounded-xl border border-brand-border px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-brand-cyan/50 hover:text-brand-cyan"
+          >
+            <Icon name="shield" class="w-4 h-4" />
+            {t.discover.ctaSecondary}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="descensos" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h2 class="font-display text-2xl font-semibold text-white">{t.home.sectionTitle}</h2>
+        <p class="mt-1 text-sm text-slate-400">{t.home.sectionSubtitle}</p>
+      </div>
+      <div class="w-full max-w-xs">
+        <input
+          type="search"
+          data-page-search
+          placeholder={t.search.livePlaceholder}
+          class="w-full rounded-xl border border-brand-border bg-brand-surface/80 px-4 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-cyan/60 focus:ring-2 focus:ring-brand-cyan/20"
+        />
+      </div>
+    </div>
+
+    <FilterBar
+      zonas={zonas}
+      grados={grados}
+      caracteres={caracteres}
+      caracterLabels={t.caracterTags}
+      labels={{ zona: t.filters.zona, dificultad: t.filters.dificultad, caracter: t.filters.caracter, todos: t.filters.todos, empty: t.filters.empty }}
+    />
+
+    <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {torrentes.map((torrente) => (
+        <TorrenteCard torrente={torrente} lang={lang} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

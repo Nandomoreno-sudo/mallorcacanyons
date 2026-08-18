@@ -1,0 +1,26 @@
+---
+import { locales, stripLocale, localizePath, type Locale } from '../i18n/config';
+
+interface Props {
+  lang: Locale;
+  class?: string;
+}
+
+const { lang, class: className = '' } = Astro.props;
+const { path } = stripLocale(Astro.url.pathname);
+---
+
+<div class:list={['flex items-center gap-0.5 rounded-full border border-brand-border bg-brand-surface/80 p-0.5', className]}>
+  {locales.map((l) => (
+    <a
+      href={localizePath(path, l)}
+      aria-current={l === lang ? 'true' : undefined}
+      class:list={[
+        'rounded-full px-2 py-1 text-xs font-semibold uppercase transition',
+        l === lang ? 'bg-brand-cyan/20 text-brand-cyan' : 'text-slate-400 hover:text-white',
+      ]}
+    >
+      {l}
+    </a>
+  ))}
+</div>

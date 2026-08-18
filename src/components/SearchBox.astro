@@ -1,0 +1,107 @@
+---
+import Icon from './Icon.astro';
+import { withBase } from '../i18n/config';
+
+interface SearchItem {
+  nombre: string;
+  slug: string;
+  zona: string;
+  dificultad: string;
+}
+
+interface Props {
+  torrentes: SearchItem[];
+  id: string;
+  placeholder?: string;
+  size?: 'sm' | 'lg';
+}
+
+const { torrentes, id, placeholder = 'Buscar torrente, zona o dificultad…', size = 'sm' } = Astro.props;
+
+const sizes = {
+  sm: 'py-2 text-sm',
+  lg: 'py-3.5 text-base',
+};
+
+const torrentesHref = withBase('/torrentes');
+---
+
+<div class="relative w-full" data-search-root id={id}>
+  <div class="relative">
+    <Icon name="search" class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+    <input
+      type="search"
+      autocomplete="off"
+      data-search-input
+      placeholder={placeholder}
+      class={`w-full rounded-xl border border-brand-border bg-brand-surface/80 pl-10 pr-4 ${sizes[size]} text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-brand-cyan/60 focus:ring-2 focus:ring-brand-cyan/20`}
+    />
+  </div>
+  <ul
+    data-search-results
+    class="absolute z-30 mt-2 hidden w-full overflow-hidden rounded-xl border border-brand-border bg-brand-surface2 shadow-card"
+  >
+  </ul>
+</div>
+
+<script define:vars={{ torrentes, id, torrentesHref }}>
+  const root = document.getElementById(id);
+  if (root) {
+    const input = root.querySelector('[data-search-input]');
+    const results = root.querySelector('[data-search-results]');
+
+    const render = (items) => {
+      if (!items.length) {
+        results.classList.add('hidden');
+        results.innerHTML = '';
+        return;
+      }
+      results.innerHTML = items
+        .slice(0, 6)
+        .map(
+          (t) => `
+          <li>
+            <a href="${torrentesHref}/${t.slug}" class="flex items-center justify-between gap-3 px-4 py-3 text-sm text-slate-200 hover:bg-brand-cyan/10 hover:text-brand-cyan transition">
+              <span class="font-medium">${t.nombre}</span>
+              <span class="shrink-0 text-xs text-slate-500">${t.zona.split('/')[0].trim()} · ${t.dificultad.split(' ')[0]}</span>
+            </a>
+          </li>`
+        )
+        .join('');
+      results.classList.remove('hidden');
+    };
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) {
+        render([]);
+        return;
+      }
+      const matches = torrentes.filter((t) =>
+        [t.nombre, t.zona, t.dificultad].some((f) => f.toLowerCase().includes(q))
+      );
+      render(matches);
+    });
+
+    input.addEventListener('focus', () => {
+      if (input.value.trim()) input.dispatchEvent(new Event('input'));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target)) {
+        results.classList.add('hidden');
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        input.blur();
+        results.classList.add('hidden');
+      }
+      if (e.key === 'Enter') {
+        const first = results.querySelector('a');
+        if (first) window.location.href = first.getAttribute('href');
+      }
+    });
+  }
+</script>

@@ -1,0 +1,57 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { hasCustomLogo } from '../lib/site';
+import { getDictionary } from '../i18n/ui';
+import { locales, defaultLocale, localizePath, stripLocale, withBase, type Locale } from '../i18n/config';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  lang?: Locale;
+}
+
+const { title, description, image, lang = defaultLocale } = Astro.props;
+const t = getDictionary(lang);
+const metaDescription = description ?? t.meta.defaultDescription;
+
+const torrentes = await getCollection('torrentes', ({ data }) => data.lang === lang);
+const searchIndex = torrentes
+  .map((entry) => ({ nombre: entry.data.nombre, slug: entry.data.slug, zona: entry.data.zona, dificultad: entry.data.dificultad }))
+  .sort((a, b) => a.nombre.localeCompare(b.nombre, lang));
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { path: langAgnosticPath } = stripLocale(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} · Mallorca Canyons</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonicalURL} />
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(localizePath(langAgnosticPath, l), Astro.site)} />
+    ))}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} · Mallorca Canyons`} />
+    <meta property="og:description" content={metaDescription} />
+    {(image || hasCustomLogo) && <meta property="og:image" content={new URL(withBase(image ?? '/logo.webp'), Astro.site)} />}
+    <meta name="theme-color" content="#0f172a" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-brand-bg">
+    <Header searchIndex={searchIndex} lang={lang} />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

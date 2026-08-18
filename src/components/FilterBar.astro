@@ -1,0 +1,125 @@
+---
+interface Props {
+  zonas: string[];
+  grados: string[];
+  caracteres: string[];
+  caracterLabels: Record<string, string>;
+  labels: { zona: string; dificultad: string; caracter: string; todos: string; empty: string };
+}
+
+const { zonas, grados, caracteres, caracterLabels, labels } = Astro.props;
+
+const groups = [
+  { type: 'zona', label: labels.zona, values: zonas.map((v) => ({ value: v, label: v })) },
+  { type: 'grade', label: labels.dificultad, values: grados.map((v) => ({ value: v, label: v })) },
+  { type: 'caracter', label: labels.caracter, values: caracteres.map((v) => ({ value: v, label: caracterLabels[v] ?? v })) },
+];
+---
+
+<div data-filter-bar class="space-y-4">
+  {groups.map((group) => (
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="mr-1 text-xs font-semibold uppercase tracking-wide text-slate-500">{group.label}</span>
+      <button
+        type="button"
+        data-filter-btn
+        data-filter-type={group.type}
+        data-filter-value="all"
+        class="filter-chip is-active"
+      >
+        {labels.todos}
+      </button>
+      {group.values.map(({ value, label }) => (
+        <button
+          type="button"
+          data-filter-btn
+          data-filter-type={group.type}
+          data-filter-value={value}
+          class="filter-chip"
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  ))}
+
+  <p data-filter-empty class="hidden rounded-xl border border-dashed border-brand-border bg-brand-surface/40 px-4 py-6 text-center text-sm text-slate-400">
+    {labels.empty}
+  </p>
+</div>
+
+<style>
+  @reference "../styles/global.css";
+
+  .filter-chip {
+    @apply rounded-full border border-brand-border bg-brand-surface px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:border-brand-cyan/50 hover:text-white;
+  }
+  .filter-chip.is-active {
+    @apply border-brand-cyan/60 bg-brand-cyan/15 text-brand-cyan;
+  }
+</style>
+
+<script>
+  type FilterType = 'zona' | 'grade' | 'caracter';
+  const active: Record<FilterType, Set<string>> = {
+    zona: new Set(['all']),
+    grade: new Set(['all']),
+    caracter: new Set(['all']),
+  };
+
+  const bar = document.querySelector('[data-filter-bar]');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-card]'));
+  const emptyState = document.querySelector('[data-filter-empty]');
+  const pageSearch = document.querySelector<HTMLInputElement>('[data-page-search]');
+
+  function applyFilters() {
+    const q = (pageSearch?.value ?? '').trim().toLowerCase();
+    let visibleCount = 0;
+    for (const card of cards) {
+      const zona = card.dataset.zona ?? '';
+      const grade = card.dataset.grade ?? '';
+      const caracterList = (card.dataset.caracter ?? '').split(',');
+
+      const zonaOk = active.zona.has('all') || active.zona.has(zona);
+      const gradeOk = active.grade.has('all') || active.grade.has(grade);
+      const caracterOk = active.caracter.has('all') || caracterList.some((c) => active.caracter.has(c));
+      const searchOk = !q || (card.dataset.search ?? '').includes(q);
+
+      const visible = zonaOk && gradeOk && caracterOk && searchOk;
+      card.classList.toggle('hidden', !visible);
+      if (visible) visibleCount++;
+    }
+    emptyState?.classList.toggle('hidden', visibleCount !== 0);
+  }
+
+  bar?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter-btn]');
+    if (!btn) return;
+
+    const type = btn.dataset.filterType as FilterType;
+    const value = btn.dataset.filterValue as string;
+    const set = active[type];
+
+    if (value === 'all') {
+      set.clear();
+      set.add('all');
+    } else {
+      set.delete('all');
+      if (set.has(value)) {
+        set.delete(value);
+        if (set.size === 0) set.add('all');
+      } else {
+        set.add(value);
+      }
+    }
+
+    bar.querySelectorAll<HTMLButtonElement>(`[data-filter-type="${type}"]`).forEach((el) => {
+      el.classList.toggle('is-active', set.has(el.dataset.filterValue as string));
+    });
+
+    applyFilters();
+  });
+
+  // Integración con el buscador en vivo de la home (si existe input con data-page-search)
+  pageSearch?.addEventListener('input', applyFilters);
+</script>

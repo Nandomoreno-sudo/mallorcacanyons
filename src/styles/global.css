@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@config "../../tailwind.config.mjs";
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-brand-bg text-slate-200 font-display antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-cyan/30 text-white;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-slate-50;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #0b1322; }
+  ::-webkit-scrollbar-thumb { background: #263449; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #334155; }
+}
+
+@layer utilities {
+  .prose-torrent :where(p) {
+    @apply mb-4 leading-relaxed text-slate-300;
+  }
+  .prose-torrent :where(h2) {
+    @apply mt-10 mb-3 text-xl font-semibold text-brand-cyan flex items-center gap-2;
+  }
+  .prose-torrent :where(ul) {
+    @apply mb-4 ml-5 list-disc space-y-1.5 text-slate-300;
+  }
+  .prose-torrent :where(strong) {
+    @apply text-slate-100 font-semibold;
+  }
+}

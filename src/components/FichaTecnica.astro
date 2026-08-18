@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon, { type IconName } from './Icon.astro';
+import { labelCoord } from '../lib/torrente-helpers';
+import { getDictionary } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  data: CollectionEntry<'torrentes'>['data'];
+  lang: Locale;
+}
+
+const { data, lang } = Astro.props;
+const t = getDictionary(lang);
+
+const specs: { icon: IconName; label: string; value: string }[] = [
+  { icon: 'ruler', label: t.ficha.rapelMaximo, value: `${data.rapel_max} m` },
+  { icon: 'rope', label: t.ficha.cuerdas, value: data.cuerdas_recomendadas },
+  { icon: 'route', label: t.ficha.longitud, value: data.longitud_m ? `${data.longitud_m} m` : '—' },
+  { icon: 'mountain', label: t.ficha.desnivel, value: data.desnivel_m ? `${data.desnivel_m} m` : '—' },
+  { icon: 'drop', label: t.ficha.caudal, value: data.caudal },
+  { icon: 'wave', label: t.ficha.neopreno, value: data.neopreno ?? '—' },
+];
+
+const tiempos = [
+  { label: t.ficha.aproximacion, value: data.tiempos.aproximacion },
+  { label: t.ficha.descenso, value: data.tiempos.descenso },
+  { label: t.ficha.retorno, value: data.tiempos.retorno },
+  { label: t.ficha.total, value: data.tiempos.total, highlight: true },
+].filter((item) => item.value);
+
+const coords = Object.entries(data.coordenadas);
+---
+
+<div class="grid gap-6 lg:grid-cols-3">
+  <div class="rounded-2xl border border-brand-border bg-brand-surface p-5 lg:col-span-2">
+    <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+      <Icon name="layers" class="w-4 h-4 text-brand-cyan" />
+      {t.ficha.title}
+    </h2>
+    <dl class="grid gap-4 sm:grid-cols-2">
+      {specs.map((s) => (
+        <div class="flex items-start gap-3 rounded-xl bg-brand-surface2/60 p-3">
+          <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-cyan/10 text-brand-cyan">
+            <Icon name={s.icon} class="w-4 h-4" />
+          </span>
+          <div>
+            <dt class="text-xs text-slate-500">{s.label}</dt>
+            <dd class="text-sm font-medium text-slate-100">{s.value}</dd>
+          </div>
+        </div>
+      ))}
+    </dl>
+
+    {data.regulacion_permisos && (
+      <div class="mt-4 flex items-start gap-3 rounded-xl border border-brand-orange/30 bg-brand-orange/5 p-3.5">
+        <Icon name="alert" class="mt-0.5 w-5 h-5 shrink-0 text-brand-orange" />
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-brand-orange">{t.ficha.regulacion}</p>
+          <p class="mt-1 text-sm text-slate-300">{data.regulacion_permisos}</p>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <div class="space-y-6">
+    <div class="rounded-2xl border border-brand-border bg-brand-surface p-5">
+      <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <Icon name="clock" class="w-4 h-4 text-brand-cyan" />
+        {t.ficha.tiempos}
+      </h2>
+      <ul class="space-y-2.5">
+        {tiempos.map((item) => (
+          <li class:list={['flex items-center justify-between rounded-lg px-3 py-2 text-sm', item.highlight ? 'bg-brand-cyan/10 text-brand-cyan font-semibold' : 'text-slate-300']}>
+            <span>{item.label}</span>
+            <span>{item.value}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="rounded-2xl border border-brand-border bg-brand-surface p-5">
+      <h2 class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <Icon name="map-pin" class="w-4 h-4 text-brand-cyan" />
+        {t.ficha.coordenadas}
+      </h2>
+      <ul class="space-y-3">
+        {coords.map(([key, value]) => (
+          <li>
+            <p class="text-xs text-slate-500">{t.coordLabels[key] ?? labelCoord(key)}</p>
+            <p class="text-sm font-mono text-slate-200">{value}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>

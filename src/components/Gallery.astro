@@ -1,0 +1,52 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import Lightbox from './Lightbox.astro';
+
+interface Props {
+  images: ImageMetadata[];
+  alt: string;
+  id: string;
+}
+
+const { images, alt, id } = Astro.props;
+---
+
+{images.length > 0 && (
+  <>
+    <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-4">
+      {images.map((img, i) => (
+        <button
+          type="button"
+          data-open-lightbox={id}
+          data-index={i}
+          class="group relative aspect-square overflow-hidden rounded-xl bg-brand-surface2 ring-1 ring-brand-border transition hover:ring-brand-cyan/50"
+        >
+          <Image
+            src={img}
+            alt={`${alt} — foto ${i + 1}`}
+            width={400}
+            height={400}
+            loading={i < 4 ? 'eager' : 'lazy'}
+            class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+          />
+          <span class="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition group-hover:bg-black/20 group-hover:opacity-100">
+            <Icon name="camera" class="w-5 h-5 text-white drop-shadow" />
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <Lightbox images={images} id={`${id}-lightbox`} alt={alt} />
+  </>
+)}
+
+<script define:vars={{ id }}>
+  document.querySelectorAll(`[data-open-lightbox="${id}"]`).forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const index = Number(btn.getAttribute('data-index'));
+      window.__lightboxes?.[`${id}-lightbox`]?.(index);
+    });
+  });
+</script>

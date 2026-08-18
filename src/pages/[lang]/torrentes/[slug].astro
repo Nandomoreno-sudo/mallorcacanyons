@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import TorrenteView from '../../../views/TorrenteView.astro';
+import { locales, defaultLocale } from '../../../i18n/config';
+
+export async function getStaticPaths() {
+  const langs = locales.filter((l) => l !== defaultLocale);
+  const paths = [];
+  for (const lang of langs) {
+    const torrentes = await getCollection('torrentes', ({ data }) => data.lang === lang);
+    for (const torrente of torrentes) {
+      paths.push({ params: { lang, slug: torrente.data.slug }, props: { torrente, lang } });
+    }
+  }
+  return paths;
+}
+
+const { torrente, lang } = Astro.props;
+---
+
+<TorrenteView torrente={torrente} lang={lang} />

@@ -1,0 +1,24 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  icon?: IconName;
+  label: string;
+  tone?: 'cyan' | 'orange' | 'danger' | 'neutral';
+  class?: string;
+}
+
+const { icon, label, tone = 'neutral', class: className = '' } = Astro.props;
+
+const tones: Record<string, string> = {
+  cyan: 'bg-brand-cyan/10 text-brand-cyan ring-1 ring-inset ring-brand-cyan/30',
+  orange: 'bg-brand-orange/10 text-brand-orange ring-1 ring-inset ring-brand-orange/30',
+  danger: 'bg-brand-danger/10 text-red-400 ring-1 ring-inset ring-brand-danger/30',
+  neutral: 'bg-slate-800/70 text-slate-300 ring-1 ring-inset ring-slate-700',
+};
+---
+
+<span class={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${tones[tone]} ${className}`}>
+  {icon && <Icon name={icon} class="w-3.5 h-3.5" />}
+  {label}
+</span>
