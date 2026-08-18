@@ -24,3 +24,36 @@ export function labelCoord(key: string): string {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 }
+
+export interface ParsedCoord {
+  lat: number;
+  lng: number;
+  note: string | null;
+  /** "39.7345° N, 2.7681° E - Carretera Orient" */
+  display: string;
+  mapsUrl: string;
+  /** "39.7345, 2.7681" listo para copiar/pegar */
+  copyValue: string;
+}
+
+/** Parsea "lat, lng (nota opcional)" -> coordenadas con cardinalidad N/S/E/W y enlace a Google Maps. */
+export function parseCoord(raw: string): ParsedCoord | null {
+  const match = raw.match(/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*(?:\(([^)]+)\))?/);
+  if (!match) return null;
+
+  const lat = Number(match[1]);
+  const lng = Number(match[2]);
+  const note = match[3]?.trim() || null;
+  const latCard = lat >= 0 ? 'N' : 'S';
+  const lngCard = lng >= 0 ? 'E' : 'W';
+  const display = `${Math.abs(lat).toFixed(4)}° ${latCard}, ${Math.abs(lng).toFixed(4)}° ${lngCard}${note ? ` - ${note}` : ''}`;
+
+  return {
+    lat,
+    lng,
+    note,
+    display,
+    mapsUrl: `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+    copyValue: `${lat}, ${lng}`,
+  };
+}

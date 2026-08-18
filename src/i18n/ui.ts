@@ -45,6 +45,9 @@ export interface Dictionary {
     total: string;
     coordenadas: string;
     regulacion: string;
+    verMapa: string;
+    copiarCoords: string;
+    copiado: string;
   };
   topo: { titleOne: string; titleMany: string; tapToZoom: string };
   gallery: { title: string };
@@ -129,6 +132,9 @@ const es: Dictionary = {
     total: 'Total',
     coordenadas: 'Coordenadas GPS',
     regulacion: 'Regulación y permisos',
+    verMapa: 'Ver en Maps',
+    copiarCoords: 'Copiar',
+    copiado: '¡Copiado!',
   },
   topo: { titleOne: 'Topografía / Croquis', titleMany: 'Topografías / Croquis', tapToZoom: 'Toca para ampliar' },
   gallery: { title: 'Galería fotográfica' },
@@ -251,6 +257,9 @@ const en: Dictionary = {
     total: 'Total',
     coordenadas: 'GPS coordinates',
     regulacion: 'Regulations & permits',
+    verMapa: 'View on Maps',
+    copiarCoords: 'Copy',
+    copiado: 'Copied!',
   },
   topo: { titleOne: 'Topo / Sketch', titleMany: 'Topos / Sketches', tapToZoom: 'Tap to zoom' },
   gallery: { title: 'Photo gallery' },
@@ -373,6 +382,9 @@ const de: Dictionary = {
     total: 'Gesamt',
     coordenadas: 'GPS-Koordinaten',
     regulacion: 'Genehmigungen & Vorschriften',
+    verMapa: 'In Maps öffnen',
+    copiarCoords: 'Kopieren',
+    copiado: 'Kopiert!',
   },
   topo: { titleOne: 'Topo / Skizze', titleMany: 'Topos / Skizzen', tapToZoom: 'Tippen zum Vergrößern' },
   gallery: { title: 'Fotogalerie' },
