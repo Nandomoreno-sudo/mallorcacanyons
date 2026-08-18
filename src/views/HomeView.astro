@@ -45,8 +45,8 @@ const caracteres = [...new Set(torrentes.flatMap((entry) => entry.data.tags))].s
         decoding="async"
         class="h-full w-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-brand-bg/65 via-brand-bg/35 to-brand-bg/10"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-brand-bg/55 via-brand-bg/5 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-bg/75 via-brand-bg/45 to-brand-bg/20"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-brand-bg/65 via-brand-bg/15 to-transparent"></div>
       <div class="absolute inset-0 bg-grid-fade"></div>
     </div>
     <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
@@ -58,7 +58,7 @@ const caracteres = [...new Set(torrentes.flatMap((entry) => entry.data.tags))].s
         <h1 class="font-display text-4xl font-bold leading-tight text-white sm:text-5xl">
           {t.home.titlePre}<span class="text-brand-cyan">{t.home.titleHighlight}</span>{t.home.titlePost}
         </h1>
-        <p class="mt-4 text-lg text-slate-400">
+        <p class="mt-4 text-lg font-medium text-slate-100 drop-shadow-md">
           {t.home.subtitle}
         </p>
 
