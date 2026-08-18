@@ -3,7 +3,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
-import { hasCustomLogo } from '../lib/site';
 import { getDictionary } from '../i18n/ui';
 import { locales, defaultLocale, localizePath, stripLocale, withBase, type Locale } from '../i18n/config';
 
@@ -25,6 +24,7 @@ const searchIndex = torrentes
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { path: langAgnosticPath } = stripLocale(Astro.url.pathname);
+const ogImageURL = new URL(withBase(image ?? '/og-image.png'), Astro.site);
 ---
 
 <!doctype html>
@@ -44,7 +44,15 @@ const { path: langAgnosticPath } = stripLocale(Astro.url.pathname);
     <meta property="og:type" content="website" />
     <meta property="og:title" content={`${title} · Mallorca Canyons`} />
     <meta property="og:description" content={metaDescription} />
-    {(image || hasCustomLogo) && <meta property="og:image" content={new URL(withBase(image ?? '/logo.webp'), Astro.site)} />}
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mallorca Canyons - Guía técnica de torrentes y barrancos" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} · Mallorca Canyons`} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImageURL} />
     <meta name="theme-color" content="#0f172a" />
   </head>
   <body class="min-h-screen flex flex-col bg-brand-bg">
