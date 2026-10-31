@@ -3,8 +3,10 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { getDictionary } from '../i18n/ui';
 import { locales, defaultLocale, localizePath, stripLocale, withBase, type Locale } from '../i18n/config';
+import { INSTAGRAM_URL, EMAIL_ADDRESS } from '../lib/contact';
 
 interface Props {
   title: string;
@@ -25,6 +27,18 @@ const searchIndex = torrentes
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { path: langAgnosticPath } = stripLocale(Astro.url.pathname);
 const ogImageURL = new URL(withBase(image ?? '/og-image.png'), Astro.site);
+
+// Organization, no LocalBusiness: es un proyecto informativo sin ánimo de lucro, no una empresa.
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Mallorca Canyons',
+  description: t.meta.defaultDescription,
+  url: Astro.site?.toString(),
+  logo: ogImageURL.toString(),
+  email: EMAIL_ADDRESS,
+  sameAs: [INSTAGRAM_URL],
+};
 ---
 
 <!doctype html>
@@ -54,6 +68,7 @@ const ogImageURL = new URL(withBase(image ?? '/og-image.png'), Astro.site);
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={ogImageURL} />
     <meta name="theme-color" content="#0f172a" />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   </head>
   <body class="min-h-screen flex flex-col bg-brand-bg">
     <Header searchIndex={searchIndex} lang={lang} />
@@ -61,5 +76,6 @@ const ogImageURL = new URL(withBase(image ?? '/og-image.png'), Astro.site);
       <slot />
     </main>
     <Footer lang={lang} />
+    <WhatsAppButton message={t.cta.whatsappMessageGeneral} label={t.cta.whatsappFloat} />
   </body>
 </html>

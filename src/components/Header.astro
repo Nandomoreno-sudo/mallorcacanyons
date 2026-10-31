@@ -25,6 +25,7 @@ const navLinks = [
   { href: localizePath('/seguridad', lang), label: t.nav.seguridad },
 ];
 const home = localizePath('/', lang);
+const contactoHref = localizePath('/contacto', lang);
 ---
 
 <header class="sticky top-0 z-40 border-b border-brand-border/80 bg-brand-bg/85 backdrop-blur supports-[backdrop-filter]:bg-brand-bg/70">
@@ -55,6 +56,13 @@ const home = localizePath('/', lang);
       ))}
     </nav>
 
+    <a
+      href={contactoHref}
+      class="ml-1 hidden shrink-0 rounded-lg border border-brand-cyan/40 px-3.5 py-2 text-sm font-semibold text-brand-cyan transition hover:bg-brand-cyan/10 sm:flex"
+    >
+      {t.nav.contacto}
+    </a>
+
     <LanguageSwitcher lang={lang} class="hidden sm:flex" />
 
     <button
@@ -75,6 +83,9 @@ const home = localizePath('/', lang);
           {link.label}
         </a>
       ))}
+      <a href={contactoHref} class="rounded-lg border border-brand-cyan/40 px-3 py-2.5 text-sm font-semibold text-brand-cyan hover:bg-brand-cyan/10">
+        {t.nav.contacto}
+      </a>
     </nav>
     <LanguageSwitcher lang={lang} class="mt-3" />
   </div>

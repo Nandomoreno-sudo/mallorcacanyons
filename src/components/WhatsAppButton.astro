@@ -1,0 +1,38 @@
+---
+import Icon from './Icon.astro';
+import { whatsappUrl } from '../lib/contact';
+
+interface Props {
+  message: string;
+  label: string;
+  /** 'floating': botón circular fijo en la esquina, visible en toda la web. 'inline': botón de ancho natural para incrustar en una página. */
+  variant?: 'floating' | 'inline';
+  class?: string;
+}
+
+const { message, label, variant = 'floating', class: className = '' } = Astro.props;
+const href = whatsappUrl(message);
+---
+
+{variant === 'floating' ? (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={label}
+    title={label}
+    class={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:shadow-xl ${className}`}
+  >
+    <Icon name="whatsapp" class="h-7 w-7" />
+  </a>
+) : (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    class={`inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#1ebe5a] ${className}`}
+  >
+    <Icon name="whatsapp" class="h-4 w-4" />
+    {label}
+  </a>
+)}

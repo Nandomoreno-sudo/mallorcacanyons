@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://Nandomoreno-sudo.github.io',
@@ -8,6 +9,7 @@ export default defineConfig({
   server: {
     host: true,
   },
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
   },

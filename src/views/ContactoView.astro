@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { getDictionary } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+import { INSTAGRAM_URL, mailtoUrl } from '../lib/contact';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+
+const wayIcons = ['whatsapp', 'mail', 'instagram'] as const;
+const emailHref = mailtoUrl(t.cta.whatsappMessageGeneral);
+---
+
+<BaseLayout title={t.contacto.title} description={t.contacto.intro} lang={lang}>
+  <section class="border-b border-brand-border/80 bg-grid-fade">
+    <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+      <p class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-cyan">
+        <Icon name="phone" class="w-4 h-4" />
+        {t.contacto.badge}
+      </p>
+      <h1 class="font-display text-4xl font-bold text-white">{t.contacto.title}</h1>
+      <p class="mt-4 text-lg text-slate-400">
+        {t.contacto.intro}
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <WhatsAppButton message={t.cta.whatsappMessageGeneral} label={t.contacto.whatsappCta} variant="inline" />
+        <a
+          href={emailHref}
+          class="inline-flex items-center gap-2 rounded-xl border border-brand-border px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-brand-cyan/50 hover:text-brand-cyan"
+        >
+          <Icon name="mail" class="w-4 h-4" />
+          {t.contacto.emailCta}
+        </a>
+        <a
+          href={INSTAGRAM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-xl border border-brand-border px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-brand-cyan/50 hover:text-brand-cyan"
+        >
+          <Icon name="instagram" class="w-4 h-4" />
+          {t.contacto.instagramCta}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <h2 class="flex items-center gap-2 font-display text-xl font-semibold text-white">
+      <Icon name="compass" class="w-5 h-5 text-brand-cyan" />
+      {t.contacto.waysTitle}
+    </h2>
+    <div class="mt-4 grid gap-3 sm:grid-cols-3">
+      {t.contacto.ways.map((way, i) => (
+        <div class="rounded-xl border border-brand-border bg-brand-surface p-5">
+          <p class="flex items-center gap-2 text-sm font-semibold text-brand-cyan">
+            <Icon name={wayIcons[i]} class="w-4 h-4" />
+            {way.title}
+          </p>
+          <p class="mt-2 text-sm leading-relaxed text-slate-300">{way.body}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12">
+      <h2 class="flex items-center gap-2 font-display text-xl font-semibold text-white">
+        <Icon name="alert" class="w-5 h-5 text-brand-orange" />
+        {t.contacto.faqTitle}
+      </h2>
+      <div class="mt-4 space-y-4">
+        {t.contacto.faq.map((item) => (
+          <div class="rounded-xl border border-brand-border bg-brand-surface p-5">
+            <p class="mb-2 text-sm font-semibold text-white">{item.title}</p>
+            <p class="text-sm leading-relaxed text-slate-300">{item.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

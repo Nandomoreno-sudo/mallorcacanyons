@@ -1,0 +1,12 @@
+---
+import ContactoView from '../../views/ContactoView.astro';
+import { locales, defaultLocale } from '../../i18n/config';
+
+export function getStaticPaths() {
+  return locales.filter((l) => l !== defaultLocale).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: 'en' | 'de' };
+---
+
+<ContactoView lang={lang} />

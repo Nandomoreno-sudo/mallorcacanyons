@@ -8,6 +8,7 @@ import TopoViewer from '../components/TopoViewer.astro';
 import Gallery from '../components/Gallery.astro';
 import Badge from '../components/Badge.astro';
 import Icon from '../components/Icon.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { getTorrenteMedia } from '../lib/images';
 import { extractGrade, gradeAccent, primaryZona } from '../lib/torrente-helpers';
 import { getDictionary } from '../i18n/ui';
@@ -26,9 +27,25 @@ const media = getTorrenteMedia(data.slug);
 const grade = extractGrade(data.dificultad);
 const accent = gradeAccent(data.dificultad);
 const zona = primaryZona(data.zona);
+const whatsappMessage = t.cta.whatsappMessageTorrente.replace('{nombre}', data.nombre);
+
+// Geo aproximado para los datos estructurados: primera coordenada "lat, lng (nota)" del frontmatter.
+const firstCoord = Object.values(data.coordenadas)[0] ?? '';
+const coordMatch = firstCoord.match(/-?\d+\.\d+/g);
+const geo = coordMatch && coordMatch.length >= 2 ? { latitude: Number(coordMatch[0]), longitude: Number(coordMatch[1]) } : null;
+
+const placeSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristAttraction',
+  name: data.nombre,
+  description: `${data.nombre} — ${data.zona}. ${data.caracter}.`,
+  touristType: 'Canyoning',
+  ...(geo && { geo: { '@type': 'GeoCoordinates', ...geo } }),
+};
 ---
 
 <BaseLayout title={data.nombre} description={`${data.nombre} — ${data.zona}.`} lang={lang}>
+  <script type="application/ld+json" set:html={JSON.stringify(placeSchema)} />
   <section class="relative">
     <div class="relative h-[52vh] min-h-[380px] w-full overflow-hidden">
       {media.hero && (
@@ -71,6 +88,12 @@ const zona = primaryZona(data.zona);
 
   <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
     <FichaTecnica data={data} lang={lang} />
+
+    <div class="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-brand-border bg-brand-surface/60 p-4">
+      <Icon name="whatsapp" class="h-5 w-5 shrink-0 text-[#25D366]" />
+      <p class="text-sm text-slate-300">{t.cta.consultarTorrente}</p>
+      <WhatsAppButton message={whatsappMessage} label={t.contacto.whatsappCta} variant="inline" class="ml-auto" />
+    </div>
 
     <article class="prose-torrent mt-12 max-w-3xl">
       <Content />

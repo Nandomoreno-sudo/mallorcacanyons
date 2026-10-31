@@ -7,8 +7,26 @@ export interface ProtocolStep {
 
 export interface Dictionary {
   meta: { defaultDescription: string };
-  nav: { torrentes: string; seguridad: string; openMenu: string };
+  nav: { torrentes: string; seguridad: string; contacto: string; openMenu: string };
   search: { headerPlaceholder: string; heroPlaceholder: string; livePlaceholder: string };
+  cta: {
+    consultarTorrente: string;
+    whatsappFloat: string;
+    whatsappMessageGeneral: string;
+    whatsappMessageTorrente: string;
+  };
+  contacto: {
+    badge: string;
+    title: string;
+    intro: string;
+    whatsappCta: string;
+    instagramCta: string;
+    emailCta: string;
+    waysTitle: string;
+    ways: ProtocolStep[];
+    faqTitle: string;
+    faq: ProtocolStep[];
+  };
   home: {
     badge: string;
     titlePre: string;
@@ -65,6 +83,7 @@ export interface Dictionary {
     disclaimerPost: string;
     copyright: string;
     note: string;
+    instagram: string;
   };
   safety: {
     badge: string;
@@ -89,11 +108,38 @@ export interface Dictionary {
 
 const es: Dictionary = {
   meta: { defaultDescription: 'Guía técnica y visual de torrentes y barrancos de Mallorca.' },
-  nav: { torrentes: 'Torrentes', seguridad: 'Seguridad', openMenu: 'Abrir menú' },
+  nav: { torrentes: 'Torrentes', seguridad: 'Seguridad', contacto: 'Contacto', openMenu: 'Abrir menú' },
   search: {
     headerPlaceholder: 'Buscar torrente, zona o dificultad…',
     heroPlaceholder: 'Buscar por nombre, zona o dificultad…',
     livePlaceholder: 'Filtrar en vivo…',
+  },
+  cta: {
+    consultarTorrente: '¿Dudas sobre este torrente?',
+    whatsappFloat: 'Contactar por WhatsApp',
+    whatsappMessageGeneral: 'Hola, tengo una consulta sobre un torrente de Mallorca',
+    whatsappMessageTorrente: 'Hola, tengo una consulta sobre el torrente de {nombre}',
+  },
+  contacto: {
+    badge: 'Contacto',
+    title: 'Contacta',
+    intro:
+      'Este es un proyecto informativo sin ánimo de lucro, hecho por afición al barranquismo en la Serra de Tramuntana. Si tienes dudas sobre un torrente, has detectado un dato desactualizado o quieres aportar información, escríbenos.',
+    whatsappCta: 'Escribir por WhatsApp',
+    instagramCta: 'Síguenos en Instagram',
+    emailCta: 'Escribir un email',
+    waysTitle: 'Cómo contactar',
+    ways: [
+      { title: 'WhatsApp', body: 'La vía más rápida para una consulta puntual sobre un torrente, su estado o cómo llegar.' },
+      { title: 'Email', body: 'Si prefieres escribir con calma o adjuntar una foto: info@mallorcacanyons.com.' },
+      { title: 'Instagram', body: 'Escríbenos por mensaje directo o deja un comentario en nuestras publicaciones.' },
+    ],
+    faqTitle: 'Preguntas frecuentes',
+    faq: [
+      { title: '¿Organizáis salidas o hacéis de guías?', body: 'No. Esta web es una guía de consulta sin ánimo de lucro, no una empresa de guiado ni de reservas. Si buscas salir con un guía profesional, consulta empresas especializadas de la isla.' },
+      { title: '¿Puedo preguntar dudas sobre un torrente concreto?', body: 'Sí, por WhatsApp o por Instagram. Respondemos cuando podemos, como el proyecto personal que es.' },
+      { title: 'He visto un dato incorrecto en una ficha, ¿cómo lo aviso?', body: 'Escríbenos indicando el torrente y el dato a corregir. La información se actualiza también gracias a quien la usa sobre el terreno.' },
+    ],
   },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',
@@ -152,8 +198,9 @@ const es: Dictionary = {
     disclaimerPre: 'El barranquismo es una actividad de riesgo. Las condiciones (caudal, meteorología, estado del material fijo) cambian constantemente. Consulta siempre ',
     disclaimerLink: 'protocolos y normativa',
     disclaimerPost: ' y contrata guía profesional si no tienes experiencia técnica contrastada.',
-    copyright: 'Mallorca Canyons. Uso informativo, no comercial.',
+    copyright: 'Mallorca Canyons. Proyecto informativo sin ánimo de lucro.',
     note: 'Descensos verificados sobre el terreno · Datos sujetos a cambios estacionales',
+    instagram: '@mallorcacanyons',
   },
   safety: {
     badge: 'Seguridad',
@@ -214,11 +261,38 @@ const es: Dictionary = {
 
 const en: Dictionary = {
   meta: { defaultDescription: 'A technical and visual guide to the canyons and gorges of Mallorca.' },
-  nav: { torrentes: 'Canyons', seguridad: 'Safety', openMenu: 'Open menu' },
+  nav: { torrentes: 'Canyons', seguridad: 'Safety', contacto: 'Contact', openMenu: 'Open menu' },
   search: {
     headerPlaceholder: 'Search canyon, area or difficulty…',
     heroPlaceholder: 'Search by name, area or difficulty…',
     livePlaceholder: 'Filter live…',
+  },
+  cta: {
+    consultarTorrente: 'Questions about this canyon?',
+    whatsappFloat: 'Contact on WhatsApp',
+    whatsappMessageGeneral: "Hi, I have a question about a canyon in Mallorca",
+    whatsappMessageTorrente: "Hi, I have a question about the {nombre} canyon",
+  },
+  contacto: {
+    badge: 'Contact',
+    title: 'Get in touch',
+    intro:
+      "This is a non-profit, informational project, made out of a passion for canyoning in the Serra de Tramuntana. If you have questions about a canyon, spotted outdated info, or want to contribute information, reach out.",
+    whatsappCta: 'Message on WhatsApp',
+    instagramCta: 'Follow us on Instagram',
+    emailCta: 'Send an email',
+    waysTitle: 'How to reach us',
+    ways: [
+      { title: 'WhatsApp', body: 'The fastest way for a quick question about a canyon, its condition, or how to get there.' },
+      { title: 'Email', body: 'If you’d rather write at your own pace or attach a photo: info@mallorcacanyons.com.' },
+      { title: 'Instagram', body: 'Send us a direct message or leave a comment on our posts.' },
+    ],
+    faqTitle: 'Frequently asked questions',
+    faq: [
+      { title: 'Do you organise trips or work as guides?', body: "No. This site is a non-profit reference guide, not a guiding or booking business. If you're looking for a professional guide, check specialised companies on the island." },
+      { title: 'Can I ask about a specific canyon?', body: "Yes, via WhatsApp or Instagram. We reply when we can, as the personal project it is." },
+      { title: "I've spotted an incorrect detail on a technical sheet, how do I report it?", body: 'Tell us which canyon and which detail needs fixing. The information also gets updated thanks to people using it on the ground.' },
+    ],
   },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',
@@ -277,8 +351,9 @@ const en: Dictionary = {
     disclaimerPre: 'Canyoning is a risk activity. Conditions (water flow, weather, fixed gear condition) change constantly. Always check the ',
     disclaimerLink: 'protocols and regulations',
     disclaimerPost: ' and hire a professional guide if you lack proven technical experience.',
-    copyright: 'Mallorca Canyons. Informational use only, non-commercial.',
+    copyright: 'Mallorca Canyons. A non-profit informational project.',
     note: 'Descents verified on the ground · Data subject to seasonal changes',
+    instagram: '@mallorcacanyons',
   },
   safety: {
     badge: 'Safety',
@@ -339,11 +414,38 @@ const en: Dictionary = {
 
 const de: Dictionary = {
   meta: { defaultDescription: 'Ein technischer und visueller Guide für die Schluchten und Canyons Mallorcas.' },
-  nav: { torrentes: 'Schluchten', seguridad: 'Sicherheit', openMenu: 'Menü öffnen' },
+  nav: { torrentes: 'Schluchten', seguridad: 'Sicherheit', contacto: 'Kontakt', openMenu: 'Menü öffnen' },
   search: {
     headerPlaceholder: 'Schlucht, Gebiet oder Schwierigkeit suchen…',
     heroPlaceholder: 'Nach Name, Gebiet oder Schwierigkeit suchen…',
     livePlaceholder: 'Live filtern…',
+  },
+  cta: {
+    consultarTorrente: 'Fragen zu dieser Schlucht?',
+    whatsappFloat: 'Über WhatsApp kontaktieren',
+    whatsappMessageGeneral: 'Hallo, ich habe eine Frage zu einer Schlucht auf Mallorca',
+    whatsappMessageTorrente: 'Hallo, ich habe eine Frage zur Schlucht {nombre}',
+  },
+  contacto: {
+    badge: 'Kontakt',
+    title: 'Kontaktiere uns',
+    intro:
+      'Dies ist ein nicht-kommerzielles Informationsprojekt, entstanden aus Leidenschaft für Canyoning in der Serra de Tramuntana. Wenn du Fragen zu einer Schlucht hast, veraltete Angaben entdeckt hast oder Informationen beitragen möchtest, melde dich.',
+    whatsappCta: 'Auf WhatsApp schreiben',
+    instagramCta: 'Folge uns auf Instagram',
+    emailCta: 'E-Mail schreiben',
+    waysTitle: 'So erreichst du uns',
+    ways: [
+      { title: 'WhatsApp', body: 'Der schnellste Weg für eine kurze Frage zu einer Schlucht, ihrem Zustand oder der Anfahrt.' },
+      { title: 'E-Mail', body: 'Wenn du lieber in Ruhe schreiben oder ein Foto anhängen möchtest: info@mallorcacanyons.com.' },
+      { title: 'Instagram', body: 'Schreib uns per Direktnachricht oder hinterlasse einen Kommentar unter unseren Beiträgen.' },
+    ],
+    faqTitle: 'Häufige Fragen',
+    faq: [
+      { title: 'Organisiert ihr Touren oder arbeitet als Guides?', body: 'Nein. Diese Seite ist ein nicht-kommerzieller Referenzguide, kein Buchungs- oder Guiding-Unternehmen. Für eine professionelle Führung wende dich an spezialisierte Unternehmen auf der Insel.' },
+      { title: 'Kann ich zu einer bestimmten Schlucht fragen?', body: 'Ja, über WhatsApp oder Instagram. Wir antworten, wenn wir Zeit finden – es ist ein persönliches Projekt.' },
+      { title: 'Ich habe eine falsche Angabe in einem Datenblatt entdeckt, wie melde ich das?', body: 'Teile uns mit, welche Schlucht und welche Angabe korrigiert werden muss. Die Informationen werden auch dank der Rückmeldungen aus der Praxis aktuell gehalten.' },
+    ],
   },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',
@@ -402,8 +504,9 @@ const de: Dictionary = {
     disclaimerPre: 'Canyoning ist eine Risikoaktivität. Die Bedingungen (Wasserstand, Wetter, Zustand der fest installierten Ausrüstung) ändern sich ständig. Bitte immer die ',
     disclaimerLink: 'Protokolle und Vorschriften',
     disclaimerPost: ' konsultieren und ohne nachgewiesene technische Erfahrung eine professionelle Führung buchen.',
-    copyright: 'Mallorca Canyons. Nur zu Informationszwecken, nicht kommerziell.',
+    copyright: 'Mallorca Canyons. Ein nicht-kommerzielles Informationsprojekt.',
     note: 'Abstiege vor Ort geprüft · Angaben können sich saisonal ändern',
+    instagram: '@mallorcacanyons',
   },
   safety: {
     badge: 'Sicherheit',
