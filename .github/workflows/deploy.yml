@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Reconstruye y despliega cada 6h aunque no haya cambios de código, para que
+    # el índice de condiciones (scripts/fetch-condiciones.mjs, datos de Open-Meteo)
+    # no se quede desactualizado.
+    - cron: '0 */6 * * *'
 
 permissions:
   contents: read

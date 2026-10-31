@@ -27,6 +27,18 @@ export interface Dictionary {
     faqTitle: string;
     faq: ProtocolStep[];
   };
+  condiciones: {
+    title: string;
+    badge: string;
+    levels: { seco: string; bajo: string; optimo: string; crecida: string };
+    rain24h: string;
+    rain72h: string;
+    rain7d: string;
+    forecast48h: string;
+    lastUpdated: string;
+    disclaimer: string;
+    noData: string;
+  };
   home: {
     badge: string;
     titlePre: string;
@@ -140,6 +152,19 @@ const es: Dictionary = {
       { title: '¿Puedo preguntar dudas sobre un torrente concreto?', body: 'Sí, por WhatsApp o por Instagram. Respondemos cuando podemos, como el proyecto personal que es.' },
       { title: 'He visto un dato incorrecto en una ficha, ¿cómo lo aviso?', body: 'Escríbenos indicando el torrente y el dato a corregir. La información se actualiza también gracias a quien la usa sobre el terreno.' },
     ],
+  },
+  condiciones: {
+    title: 'Condiciones estimadas',
+    badge: 'Estimación automática',
+    levels: { seco: 'Seco', bajo: 'Caudal bajo', optimo: 'Caudal óptimo', crecida: 'Crecida · precaución' },
+    rain24h: 'Lluvia 24h',
+    rain72h: 'Lluvia 72h',
+    rain7d: 'Lluvia 7 días',
+    forecast48h: 'Previsión próximas 48h',
+    lastUpdated: 'Actualizado',
+    disclaimer:
+      'Estimación automática a partir de lluvia acumulada y humedad del suelo (Open-Meteo). Baleares no tiene aforos en tiempo real: esto NO es una medición real de caudal. No sustituye la comprobación visual in situ ni la previsión oficial de AEMET antes de cualquier descenso.',
+    noData: 'Sin datos disponibles en este momento.',
   },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',
@@ -294,6 +319,19 @@ const en: Dictionary = {
       { title: "I've spotted an incorrect detail on a technical sheet, how do I report it?", body: 'Tell us which canyon and which detail needs fixing. The information also gets updated thanks to people using it on the ground.' },
     ],
   },
+  condiciones: {
+    title: 'Estimated conditions',
+    badge: 'Automatic estimate',
+    levels: { seco: 'Dry', bajo: 'Low water', optimo: 'Good water level', crecida: 'Flood risk · caution' },
+    rain24h: 'Rain, 24h',
+    rain72h: 'Rain, 72h',
+    rain7d: 'Rain, 7 days',
+    forecast48h: 'Forecast, next 48h',
+    lastUpdated: 'Updated',
+    disclaimer:
+      "Automatic estimate from accumulated rainfall and soil moisture (Open-Meteo). The Balearic Islands have no real-time flow gauges: this is NOT a real flow measurement. It does not replace an on-site visual check or the official AEMET forecast before any descent.",
+    noData: 'No data available right now.',
+  },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',
     titlePre: 'A technical guide to ',
@@ -446,6 +484,19 @@ const de: Dictionary = {
       { title: 'Kann ich zu einer bestimmten Schlucht fragen?', body: 'Ja, über WhatsApp oder Instagram. Wir antworten, wenn wir Zeit finden – es ist ein persönliches Projekt.' },
       { title: 'Ich habe eine falsche Angabe in einem Datenblatt entdeckt, wie melde ich das?', body: 'Teile uns mit, welche Schlucht und welche Angabe korrigiert werden muss. Die Informationen werden auch dank der Rückmeldungen aus der Praxis aktuell gehalten.' },
     ],
+  },
+  condiciones: {
+    title: 'Geschätzte Bedingungen',
+    badge: 'Automatische Schätzung',
+    levels: { seco: 'Trocken', bajo: 'Niedriger Wasserstand', optimo: 'Guter Wasserstand', crecida: 'Hochwassergefahr · Vorsicht' },
+    rain24h: 'Regen, 24h',
+    rain72h: 'Regen, 72h',
+    rain7d: 'Regen, 7 Tage',
+    forecast48h: 'Vorhersage, nächste 48h',
+    lastUpdated: 'Aktualisiert',
+    disclaimer:
+      'Automatische Schätzung aus kumuliertem Niederschlag und Bodenfeuchte (Open-Meteo). Die Balearen haben keine Echtzeit-Pegelmessung: Dies ist KEINE reale Durchflussmessung. Sie ersetzt weder die Einschätzung vor Ort noch die offizielle AEMET-Vorhersage vor einem Abstieg.',
+    noData: 'Momentan keine Daten verfügbar.',
   },
   home: {
     badge: 'Serra de Tramuntana · Mallorca',

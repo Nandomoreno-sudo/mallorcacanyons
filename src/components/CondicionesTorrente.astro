@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+import Badge from './Badge.astro';
+import { getDictionary } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+import condicionesData from '../data/condiciones.json';
+
+interface Props {
+  slug: string;
+  lang: Locale;
+}
+
+const { slug, lang } = Astro.props;
+const t = getDictionary(lang);
+
+const condiciones = (condicionesData.torrentes as Record<string, any>)[slug];
+const generatedAt = condicionesData.generatedAt as string | null;
+
+const toneByLevel: Record<string, 'neutral' | 'cyan' | 'danger'> = {
+  seco: 'neutral',
+  bajo: 'cyan',
+  optimo: 'cyan',
+  crecida: 'danger',
+};
+
+const iconByLevel: Record<string, 'sun' | 'wave' | 'drop' | 'alert'> = {
+  seco: 'sun',
+  bajo: 'wave',
+  optimo: 'drop',
+  crecida: 'alert',
+};
+
+const lastUpdated =
+  generatedAt &&
+  new Intl.DateTimeFormat(lang, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(generatedAt));
+---
+
+{condiciones && !condiciones.error ? (
+  <div class="rounded-2xl border border-brand-border bg-brand-surface p-5">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-brand-cyan">
+        <Icon name="drop" class="w-4 h-4" />
+        {t.condiciones.title}
+      </p>
+      <Badge tone="neutral" label={t.condiciones.badge} />
+    </div>
+
+    <div class="mt-3">
+      <Badge tone={toneByLevel[condiciones.level]} icon={iconByLevel[condiciones.level]} label={t.condiciones.levels[condiciones.level]} class="text-sm" />
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div>
+        <p class="text-xs text-slate-500">{t.condiciones.rain24h}</p>
+        <p class="text-sm font-semibold text-slate-200">{condiciones.rain24h} mm</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500">{t.condiciones.rain72h}</p>
+        <p class="text-sm font-semibold text-slate-200">{condiciones.rain72h} mm</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500">{t.condiciones.rain7d}</p>
+        <p class="text-sm font-semibold text-slate-200">{condiciones.rain7d} mm</p>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500">{t.condiciones.forecast48h}</p>
+        <p class="text-sm font-semibold text-slate-200">{condiciones.forecast48h} mm</p>
+      </div>
+    </div>
+
+    {lastUpdated && <p class="mt-3 text-xs text-slate-500">{t.condiciones.lastUpdated}: {lastUpdated}</p>}
+
+    <p class="mt-3 text-xs leading-relaxed text-slate-500">{t.condiciones.disclaimer}</p>
+  </div>
+) : (
+  <div class="rounded-2xl border border-brand-border bg-brand-surface p-5 text-sm text-slate-400">
+    {t.condiciones.noData}
+  </div>
+)}
